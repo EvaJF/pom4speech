@@ -1,7 +1,7 @@
 # Polynomial mixing for efficient self-supervised speech encoders
 
 ## In brief
-This repository contains the code for the paper **“Polynomial mixing for efficient self-supervised speech encoders”** (ICASSP 2026).
+This repository contains the code for the paper **“Polynomial mixing for efficient self-supervised speech encoders”** (ICASSP 2026). TODO add link to paper
 It introduces the **Polynomial Mixer (PoM)**, a drop-in replacement for multi-head self-attention (MHA) with **linear complexity** in the input sequence length, and evaluates PoM using BEST-RQ self-supervised speech representation learning framework on downstream ASR.
 The code contained in this repository is thought as a plug-in into **SpeechBrain** library. 
 
@@ -26,6 +26,10 @@ Download from TODO add URL
 - **Fine-tuning:** LibriSpeech **train-100 (clean)** subset
 - **Evaluation:** LibriSpeech *test-clean* and *test-other* (with and without kenLM language model)
 
+### The code 
+
+TODO add tree with content 
+
 ### Example configs
 TODO see `hparams` subfolder under `recipes`
 
@@ -43,25 +47,25 @@ Transformer-based speech encoders rely on **multi-head attention**, whose **quad
 - Experiments showing PoM achieves competitive WER vs. MHA and other linear-complexity alternatives, with improved runtime/memory behavior.
 
 ### How the Polynomial Mixer works (PoM)
-PoM maps an input matrix \(X \in \mathbb{R}^{d \times n}\) to an output in \(\mathbb{R}^{d \times n}\) via a polynomial global representation \(H(X)\) and a token-wise selector \(S\):
-\[
+PoM maps an input matrix $X \in \mathbb{R}^{d \times n}$ to an output in $\mathbb{R}^{d \times n}$ via a polynomial global representation $H(X)$ and a token-wise selector $S$:
+```math
 \mathrm{PoM}(X) = W_o \left[ \sigma(W_s X) \circ H(X)\mathbf{1}^{\top} \right],
-\]
-where \(\circ\) is the Hadamard product, \(\sigma\) is a sigmoid, and \(\mathbf{1}\in\mathbb{R}^{n\times 1}\) is a vector of ones.
+```
+where $\circ$ is the Hadamard product, $\sigma$ is a sigmoid, and $\mathbf{1}\in\mathbb{R}^{n\times 1}$ is a vector of ones.
 
 The global representation is computed with a fixed-degree polynomial over projected views:
-\[
+```math
 H(X) =
 \left[
 h(W_1 X) \;\middle|\;
 h(W_1 X)\circ h(W_2 X) \;\middle|\; \dots \;\middle|\;
 \prod_{m=1}^k h(W_m X)
 \right]\mathbf{1},
-\]
+```
 and the selector is
-\[
+```math
 S=\sigma(W_s X).
-\]
+```
 
 ### Figures (from the paper)
 
@@ -71,9 +75,11 @@ S=\sigma(W_s X).
 **Inference time and peak memory**
 ![Inference time and peak memory usage of BEST-RQ models (~95M params) with various token mixers. Input length is increased from 10 to 80 seconds. MHA requires significantly more time and VRAM as the input size increases in comparison with linear alternatives, including PoM.](./figs/monitoring.png "monitoring logs")
 
-### Main results (WER)
-Models are pretrained on LibriSpeech-960h and fine-tuned on *train-100*. Confidence intervals are from 1000 bootstrap trials. Results marked † are reported from the referenced analysis; lower is better. 
-**Best MHA variant** is in bold, and the *best linear mixer* is italic.
+### Main results on LibriSpeech (WER)
+Models are pretrained on LibriSpeech-960h and fine-tuned on the *train-100* subset. 
+Confidence intervals are computed from 1000 bootstrap trials. 
+Results marked with † are reported from [Whetten at al.](https://doi.org/10.1109/SLT61566.2024.10832323) comparative study (2024). 
+Lower is better: **best MHA variant** is in bold, and the *best linear mixer* is in italic.
 
 
 **Base models:** ~95M parameters
