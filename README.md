@@ -10,23 +10,27 @@ The code contained in this repository is thought as a plug-in into **SpeechBrain
 ### Requirements
 
 Recap: 
-- **PyTorch**
-- **SpeechBrain** (used as a plug-in; version **1.0.3** in the experiments)
+- **PyTorch** (TODO : version)
+- **SpeechBrain** (version **1.0.3** in the experiments)
 - Optional for decoding: a **language model** (KenLM) TODO add link to kenLM repo.
+- **ffmpeg** or equivalent (TODO: version)
 
 TODO: add requirements file for the repo; add command line to install the requirements 
 
 
 ### Data
+
+Download from TODO add URL
+
 - **Pre-training:** LibriSpeech **960h** (English audiobooks)
 - **Fine-tuning:** LibriSpeech **train-100 (clean)** subset
 - **Evaluation:** LibriSpeech *test-clean* and *test-other* (with and without kenLM language model)
 
 ### Example configs
-see `hparams` subfolder under `recipes`
+TODO see `hparams` subfolder under `recipes`
 
 ### Example jobs
-see examples in `run` subfolder 
+TODO see examples in `run` subfolder 
 
 ## The method
 
@@ -62,26 +66,26 @@ S=\sigma(W_s X).
 ### Figures (from the paper)
 
 **Principle of PoM**
-![Principle of the Polynomial Mixer. The input sequence is projected through k polynomial branches, aggregated into a global representation H(X), and combined with a token-wise selector S. The output is obtained by projecting the selected state back to the input space.](./figs/pom_principle_small.pdf "pom_principle")
+![Principle of the Polynomial Mixer. The input sequence is projected through k polynomial branches, aggregated into a global representation H(X), and combined with a token-wise selector S. The output is obtained by projecting the selected state back to the input space.](./figs/pom_principle_small.png "pom_principle")
 
 **Inference time and peak memory**
-![Inference time and peak memory usage of BEST-RQ models (~95M params) with various token mixers. Input length is increased from 10 to 80 seconds. MHA requires significantly more time and VRAM as the input size increases in comparison with linear alternatives, including PoM.](./figs/monitoring.pdf "monitoring logs")
+![Inference time and peak memory usage of BEST-RQ models (~95M params) with various token mixers. Input length is increased from 10 to 80 seconds. MHA requires significantly more time and VRAM as the input size increases in comparison with linear alternatives, including PoM.](./figs/monitoring.png "monitoring logs")
 
 ### Main results (WER)
 Models are pretrained on LibriSpeech-960h and fine-tuned on *train-100*. Confidence intervals are from 1000 bootstrap trials. Results marked † are reported from the referenced analysis; lower is better. 
-**Best MHA variant** is in bold, and the <u>best linear mixer</u> is underlined.
+**Best MHA variant** is in bold, and the *best linear mixer* is italic.
 
 
-** Base models:** ~95M parameters
+**Base models:** ~95M parameters
 
 | Model | Clean | Clean + LM | Other | Other + LM |
 |---|---|---|---|---|
 | RelPosMHA | **7.96 (± 0.32)** | **4.89 (± 0.25)** | **17.61** (± 0.54) | 12.13 (± 0.44) |
 | RoPE MHA | **8.06** (± 0.31) | **4.90** (± 0.26) | **17.53 (± 0.48)** | **11.98 (± 0.45)** |
 | regular MHA | 8.59 (± 0.32) | 5.37 (± 0.25) | 19.44 (± 0.54) | 13.47 (± 0.46) |
-| PoM base | 8.31 (± 0.31) | <u>5.42</u> (± 0.27) | <u>19.06</u> (± 0.53) | <u>13.62</u> (± 0.48) |
+| PoM base | 8.31 (± 0.31) | *5.42* (± 0.27) | *19.06* (± 0.53) | *13.62* (± 0.48) |
 | SummaryMixing | 9.79 (± 0.34) | 5.93 (± 0.27) | 22.80 (± 0.60) | 15.84 (± 0.51) |
-| Mamba† | <u>7.61</u> | <u>5.50</u> (± 0.28) | 19.97 | 15.37 |
+| Mamba† | *7.61* | *5.50* (± 0.28) | 19.97 | 15.37 |
 | HyperConformer† | 8.22 | 5.77 (± 0.28) | 19.29 | 15.03 |
 | FastFormer† | 9.32 | 6.82 (± 0.31) | 22.75 | 17.95 |
 
@@ -91,10 +95,10 @@ Models are pretrained on LibriSpeech-960h and fine-tuned on *train-100*. Confide
 |---|---|---|---|---|
 | RelPosMHA | **4.92 (± 0.25)** | **3.49 (± 0.21)** | **10.78 (± 0.37)** | **8.09 (± 0.35)** |
 | RoPE MHA | 5.13 (± 0.26) | 3.66 (± 0.21) | 10.99 (±0.33) | 8.45 (± 0.37) |
-| PoM base | 6.28 (± 0.26) | <u>4.52</u> (± 0.23) | 14.86 (± 0.47) | <u>11.33</u> (± 0.43) |
+| PoM base | 6.28 (± 0.26) | *4.52* (± 0.23) | 14.86 (± 0.47) | *11.33* (± 0.43) |
 | SummaryMixing | 7.35 (± 0.31) | 4.85 (± 0.25) | 17.60 (± 0.53) | 12.97 (± 0.49) |
-| Mamba† | <u>5.59</u> | <u>4.48</u> (± 0.25) | 15.47 | 12.66 |
-| HyperConformer† | 5.87 | <u>4.54</u> (± 0.32) | <u>13.13</u> | <u>10.78</u> |
+| Mamba† | *5.59* | *4.48* (± 0.25) | 15.47 | 12.66 |
+| HyperConformer† | 5.87 | *4.54* (± 0.32) | *13.13* | *10.78* |
 | FastFormer† | 13.16 | 9.89 (± 0.34) | 31.91 | 26.75 |
 
 ## Citation
