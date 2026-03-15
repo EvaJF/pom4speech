@@ -16,7 +16,6 @@ In brief:
 - PyTorch 2.6.0
 - Library for checking the torchaudio backend: we used `ffmpeg` 6.2. 
 - Optional for decoding: a language model. You can install [KenLM](https://github.com/kpu/kenlm) via pip.
-- Optional for bootstrapping: thanks to the [ConfidenceIntervals](https://github.com/luferrer/ConfidenceIntervals) repo. 
 
 1. Clone the GitHub repository of Speechbrain and install the requirements:
 
@@ -128,7 +127,7 @@ S=\sigma(W_s X).
 
 ### Main results on LibriSpeech (WER)
 Models are pretrained on LibriSpeech-960h and fine-tuned on the *train-100* subset. 
-Confidence intervals are computed from 1000 bootstrap trials. 
+[Confidence intervals](https://github.com/luferrer/ConfidenceIntervals) are computed from 1000 bootstrap trials. 
 Results marked with † are reported from [Whetten at al.](https://doi.org/10.1109/SLT61566.2024.10832323) comparative study (2024). 
 Lower is better: **best MHA variant** is in bold, and the *best linear mixer* is in italic.
 
