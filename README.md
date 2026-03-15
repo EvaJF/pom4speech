@@ -1,40 +1,91 @@
 # Polynomial mixing for efficient self-supervised speech encoders
 
 ## In brief
-This repository contains the code for the paper **“Polynomial mixing for efficient self-supervised speech encoders”** (ICASSP 2026). TODO add link to paper
+This repository contains the code for the paper **“Polynomial mixing for efficient self-supervised speech encoders”** (ICASSP 2026)  [[arXiv]](https://arxiv.org/abs/2603.00683).
+
 It introduces the **Polynomial Mixer (PoM)**, a drop-in replacement for multi-head self-attention (MHA) with **linear complexity** in the input sequence length, and evaluates PoM using BEST-RQ self-supervised speech representation learning framework on downstream ASR.
-The code contained in this repository is thought as a plug-in into **SpeechBrain** library. 
+The code contained in this repository is thought as a plug-in into [**SpeechBrain** library](https://github.com/SamsungLabs/SummaryMixing). 
 
 ## Getting started
 
 ### Requirements
 
-Recap: 
-- **PyTorch** (TODO : version)
-- **SpeechBrain** (version **1.0.3** in the experiments)
-- Optional for decoding: a **language model** (KenLM) TODO add link to kenLM repo.
-- **ffmpeg** or equivalent (TODO: version)
+In brief: 
+- **SpeechBrain** : We used Speechbrain 1.0.3 in the experiments. We recommend a local install by [cloning the Speechbrain repository](https://speechbrain.readthedocs.io/en/latest/installation.html#install-locally) and using the `--editable` option.
+- Python 3.11
+- PyTorch 2.6.0
+- Library for checking the torchaudio backend: we used `ffmpeg` 6.2. 
+- Optional for decoding: a language model. You can install [KenLM](https://github.com/kpu/kenlm) via pip.
+- Optional for bootstrapping: thanks to the [ConfidenceIntervals](https://github.com/luferrer/ConfidenceIntervals) repo. 
 
-TODO: add requirements file for the repo; add command line to install the requirements 
+1. Clone the GitHub repository of Speechbrain and install the requirements:
+
+```bash
+git clone https://github.com/speechbrain/speechbrain.git
+cd speechbrain
+pip install -r requirements.txt
+pip install --editable .
+```
+
+2. In a separate folder, clone this GitHub repository.
+
+```bash
+cd ..
+git clone https://github.com/EvaJF/pom4speech
+```
+
+3. Copy the files where needed (add `-vi` to ask for confirmation for each file before overwriting). 
+
+```bash
+cp -r pom4speech/speechbrain/* speechbrain/
+```
 
 
 ### Data
 
-Download from TODO add URL
+Download LibriSpeech dataset: [OpenSLR website](http://www.openslr.org/12).
 
-- **Pre-training:** LibriSpeech **960h** (English audiobooks)
-- **Fine-tuning:** LibriSpeech **train-100 (clean)** subset
+- **Pre-training:** LibriSpeech *960h* (English audiobooks)
+- **Fine-tuning:** LibriSpeech *train-100 (clean)* subset
 - **Evaluation:** LibriSpeech *test-clean* and *test-other* (with and without kenLM language model)
 
-### The code 
+### This repo
 
-TODO add tree with content 
+__Code structure__
 
-### Example configs
-TODO see `hparams` subfolder under `recipes`
+```bash
+speechbrain
+├── recipes
+│   └── LibriSpeech
+│       ├── librispeech_prepare.py
+│       └── self-supervised-learning
+│           └── BEST-RQ
+│               ├── hparams
+│               └── train.py
+├── requirements.txt
+└── speechbrain
+    ├── lobes
+    │   └── models
+    │       ├── BESTRQ.py
+    │       └── transformer # added PoM to the list of possible mixers
+    │           ├── Conformer.py
+    │           ├── Transformer.py
+    │           └── TransformerASR.py
+    └── nnet
+        ├── pom.py          # PoM base version: main results
+        ├── pom_2ways.py    # PoM variant: ablation
+        ├── pom_3ways.py    # PoM variant: ablation
+        └── pom_select.py   # PoM variant: ablation
+```
+ 
 
-### Example jobs
-TODO see examples in `run` subfolder 
+__Examples__
+
+See `hparams` subfolder under `recipes` for example configs. In particular, you can change the `degree`, `expand` and `d_model` hyperparameters.
+- `BEST-RQ_*.yaml` for pretraining 
+- `train_sb_*.yaml` for ASR fine-tuning. 
+
+See example jobs in the `run` subfolder. 
 
 ## The method
 
@@ -108,7 +159,8 @@ Lower is better: **best MHA variant** is in bold, and the *best linear mixer* is
 | FastFormer† | 13.16 | 9.89 (± 0.34) | 31.91 | 26.75 |
 
 ## Citation
-If you use this work, please cite the paper:
+
+If you find this work useful, please cite the paper:
 
 ```bibtex
 @inproceedings{feillet2026pom,
