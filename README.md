@@ -4,7 +4,7 @@
 This repository contains the code for the paper **“Polynomial mixing for efficient self-supervised speech encoders”** (ICASSP 2026)  [[arXiv]](https://arxiv.org/abs/2603.00683).
 
 It introduces the **Polynomial Mixer (PoM)**, a drop-in replacement for multi-head self-attention (MHA) with **linear complexity** in the input sequence length, and evaluates PoM using BEST-RQ self-supervised speech representation learning framework on downstream ASR.
-The code contained in this repository is thought as a plug-in into [**SpeechBrain** library](https://github.com/SamsungLabs/SummaryMixing). 
+The code contained in this repository is thought as a plug-in into [**SpeechBrain** library]([https://github.com/SamsungLabs/SummaryMixing](https://github.com/speechbrain/speechbrain)). 
 
 ## Getting started
 
